@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+        <head>
+            <meta charset="UTF-8"></meta>
+            <title>兩性理想型調查</title>
+            <link rel="stylesheet" href="style.css"/>
+        </head>
+        <body>
+        <div class="container">
+            <h1>兩性理想型調查問卷</h1>
+            <div style="margin-top: 30px;">
+            </div>
+        <h3> Q1 姓名:請問你的名字是? </h3>
+                <input type="text" id="user-name" placeholder="請輸入姓名">
+
+        <h3> Q2 性別:請問你的性別是? </h3>
+                <div class="option-box">
+                    <input type="radio" name="user-gender" value="男性"> 男性
+                    <input type="radio" name="user-gender" value="女性"> 女性
+                    <input type="radio" name="user-gender" value="第三性"> 第三性
+                </div>
+        <h3> Q3 性向：請問你喜歡的對象性別是？ </h3>
+                <div class="option-box">
+                    <input type="checkbox" id="pref-male" name="user-pref" value="男性" onclick="if(!limitCheckbox('user-pref', 1)) this.checked = false; updateVisibility();"/> 男性
+                    <input type="checkbox" id="pref-female" name="user-pref" value="女性" onclick="if(!limitCheckbox('user-pref', 1)) this.checked = false; updateVisibility();"/> 女性
+                    <input type="checkbox" id="pref-both" name="user-pref" value="雙性戀" onclick="if(!limitCheckbox('user-pref', 1)) this.checked = false; updateVisibility();"/> 雙性戀 
+                </div>
+        <h3> Q4 身高:請問你理想對象的身高是？ </h3>
+            <ul>
+                <li id="section-male-height" style="display: none;">
+                    <b><p>男性身高:</p></b>       
+                    <div class="option-box">
+                        <input type="checkbox" name="q4-m-height" value="165以下" onclick="if(!limitCheckbox('q4-m-height', 1)) this.checked = false;"/>165cm以下 
+                        <input type="checkbox" name="q4-m-height" value="165-170" onclick="if(!limitCheckbox('q4-m-height', 1)) this.checked = false;"/>165-170cm 
+                        <input type="checkbox" name="q4-m-height" value="170-175" onclick="if(!limitCheckbox('q4-m-height', 1)) this.checked = false;"/>170-175cm 
+                        <input type="checkbox" name="q4-m-height" value="175-180" onclick="if(!limitCheckbox('q4-m-height', 1)) this.checked = false;"/>175-180cm 
+                        <input type="checkbox" name="q4-m-height" value="180-185" onclick="if(!limitCheckbox('q4-m-height', 1)) this.checked = false;"/>180-185cm 
+                        <input type="checkbox" name="q4-m-height" value="185以上" onclick="if(!limitCheckbox('q4-m-height', 1)) this.checked = false;"/>185cm以上
+                    </div>
+                </li>
+                
+                <br>
+
+                <li id="section-female-height" style="display: none;">
+                    <b><p>女性身高:</p></b>       
+                    <div class="option-box">
+                        <input type="checkbox" name="q4-f-height" value="145以下" onclick="if(!limitCheckbox('q4-f-height', 1)) this.checked = false;"/>145cm以下
+                        <input type="checkbox" name="q4-f-height" value="145-155" onclick="if(!limitCheckbox('q4-f-height', 1)) this.checked = false;"/>145-155cm 
+                        <input type="checkbox" name="q4-f-height" value="155-160" onclick="if(!limitCheckbox('q4-f-height', 1)) this.checked = false;"/>155-160cm
+                        <input type="checkbox" name="q4-f-height" value="160-165" onclick="if(!limitCheckbox('q4-f-height', 1)) this.checked = false;"/>160-165cm
+                        <input type="checkbox" name="q4-f-height" value="165-170" onclick="if(!limitCheckbox('q4-f-height', 1)) this.checked = false;"/>165-170cm
+                        <input type="checkbox" name="q4-f-height" value="170以上" onclick="if(!limitCheckbox('q4-f-height', 1)) this.checked = false;"/>170cm以上
+                    </div>
+                </li>
+            </ul>
+        <h3> Q5 年齡:請問你理想對象的年齡是？（至多選2項） </h3>
+                <div class="option-box">
+                    <input type="checkbox" name="q5-age" value="年上" onclick="if(!limitCheckbox('q5-age', 2)) this.checked = false;"/>年上
+                    <input type="checkbox" name="q5-age" value="年下" onclick="if(!limitCheckbox('q5-age', 2)) this.checked = false;"/>年下      
+                    <input type="checkbox" name="q5-age" value="同齡" onclick="if(!limitCheckbox('q5-age', 2)) this.checked = false;"/>同齡        
+                    <input type="checkbox" name="q5-age" value="以上皆可" onclick="if(!limitCheckbox('q5-age', 2)) this.checked = false;"/>以上皆可
+                </div> 
+        <h3> Q6 體態:請問你理想對象的體態是？ </h3>
+                <div class="option-box">
+                    <input type="checkbox" name="q6-body" value="苗條" onclick="if(!limitCheckbox('q6-body', 1)) this.checked = false;"/>苗條(纖細)
+                    <input type="checkbox" name="q6-body" value="偏瘦" onclick="if(!limitCheckbox('q6-body', 1)) this.checked = false;"/>偏瘦      
+                    <input type="checkbox" name="q6-body" value="勻稱" onclick="if(!limitCheckbox('q6-body', 1)) this.checked = false;"/>勻稱      
+                    <input type="checkbox" name="q6-body" value="微肉" onclick="if(!limitCheckbox('q6-body', 1)) this.checked = false;"/>微肉
+                    <input type="checkbox" name="q6-body" value="精壯" onclick="if(!limitCheckbox('q6-body', 1)) this.checked = false;"/>精壯 
+                    <input type="checkbox" name="q6-body" value="豐滿" onclick="if(!limitCheckbox('q6-body', 1)) this.checked = false;"/>豐滿
+                </div>
+        <h3> Q7 外型:請問你理想對象的外型是？（至多選4項） </h3>
+            <div class="option-box">
+                <input type="checkbox" name="q7-appearance" value="單眼皮" onclick="if(!limitCheckbox('q7-appearance', 4)) this.checked = false;"/>單眼皮
+                <input type="checkbox" name="q7-appearance" value="雙眼皮" onclick="if(!limitCheckbox('q7-appearance', 4)) this.checked = false;"/>雙眼皮    
+                <input type="checkbox" name="q7-appearance" value="大眼睛" onclick="if(!limitCheckbox('q7-appearance', 4)) this.checked = false;"/>大眼睛     
+                <input type="checkbox" name="q7-appearance" value="小眼睛" onclick="if(!limitCheckbox('q7-appearance', 4)) this.checked = false;"/>小眼睛
+                <input type="checkbox" name="q7-appearance" value="短髮" onclick="if(!limitCheckbox('q7-appearance', 4)) this.checked = false;"/>短髮
+                <input type="checkbox" name="q7-appearance" value="長髮" onclick="if(!limitCheckbox('q7-appearance', 4)) this.checked = false;"/>長髮
+                <input type="checkbox" name="q7-appearance" value="白皮" onclick="if(!limitCheckbox('q7-appearance', 4)) this.checked = false;"/>白皮
+                <input type="checkbox" name="q7-appearance" value="黑皮" onclick="if(!limitCheckbox('q7-appearance', 4)) this.checked = false;"/>黑皮
+                <input type="checkbox" name="q7-appearance" value="厚唇" onclick="if(!limitCheckbox('q7-appearance', 4)) this.checked = false;"/>厚唇
+                <input type="checkbox" name="q7-appearance" value="薄唇" onclick="if(!limitCheckbox('q7-appearance', 4)) this.checked = false;"/>薄唇
+                <input type="checkbox" name="q7-appearance" value="有鬍子" onclick="if(!limitCheckbox('q7-appearance', 4)) this.checked = false;"/>有鬍子
+                <input type="checkbox" name="q7-appearance" value="有戴眼鏡" onclick="if(!limitCheckbox('q7-appearance', 4)) this.checked = false;"/>有戴眼鏡
+                <input type="checkbox" name="q7-appearance" value="鼻子高挺" onclick="if(!limitCheckbox('q7-appearance', 4)) this.checked = false;"/>鼻子高挺
+                <input type="checkbox" name="q7-appearance" value="牙齒整齊" onclick="if(!limitCheckbox('q7-appearance', 4)) this.checked = false;"/>牙齒整齊
+            </div>     
+
+        <h3> Q8 人格特質（至多選4項）： </h3>
+            <div class="option-box">
+                <input type="checkbox" name="q8-trait" value="幽默" onclick="if(!limitCheckbox('q8-trait', 4)) this.checked = false;"/>幽默
+                <input type="checkbox" name="q8-trait" value="可愛" onclick="if(!limitCheckbox('q8-trait', 4)) this.checked = false;"/>可愛   
+                <input type="checkbox" name="q8-trait" value="冷靜" onclick="if(!limitCheckbox('q8-trait', 4)) this.checked = false;"/>冷靜    
+                <input type="checkbox" name="q8-trait" value="善良" onclick="if(!limitCheckbox('q8-trait', 4)) this.checked = false;"/>善良
+                <input type="checkbox" name="q8-trait" value="單純" onclick="if(!limitCheckbox('q8-trait', 4)) this.checked = false;"/>單純
+                <input type="checkbox" name="q8-trait" value="高智商" onclick="if(!limitCheckbox('q8-trait', 4)) this.checked = false;"/>高智商
+                <input type="checkbox" name="q8-trait" value="高情商" onclick="if(!limitCheckbox('q8-trait', 4)) this.checked = false;"/>高情商
+                <input type="checkbox" name="q8-trait" value="有主見" onclick="if(!limitCheckbox('q8-trait', 4)) this.checked = false;"/>有主見
+                <input type="checkbox" name="q8-trait" value="有反差感" onclick="if(!limitCheckbox('q8-trait', 4)) this.checked = false;"/>有反差感
+                <input type="checkbox" name="q8-trait" value="成熟穩重" onclick="if(!limitCheckbox('q8-trait', 4)) this.checked = false;"/>成熟穩重
+                <input type="checkbox" name="q8-trait" value="溫柔貼心" onclick="if(!limitCheckbox('q8-trait', 4)) this.checked = false;"/>溫柔貼心
+                <input type="checkbox" name="q8-trait" value="活潑開朗" onclick="if(!limitCheckbox('q8-trait', 4)) this.checked = false;"/>活潑開朗
+                <input type="checkbox" name="q8-trait" value="熱情有衝勁" onclick="if(!limitCheckbox('q8-trait', 4)) this.checked = false;"/>熱情有衝勁
+                <input type="checkbox" name="q8-trait" value="自信有魅力" onclick="if(!limitCheckbox('q8-trait', 4)) this.checked = false;"/>自信有魅力  
+                <input type="checkbox" name="q8-trait" value="隨和好相處" onclick="if(!limitCheckbox('q8-trait', 4)) this.checked = false;"/>隨和好相處
+            </div> 
+        <h3> Q9 興趣（至多選4項）： </h3>
+            <div class="option-box">
+                <input type="checkbox" name="q9-interest" value="運動" onclick="if(!limitCheckbox('q9-interest', 4)) this.checked = false;"/>運動
+                <input type="checkbox" name="q9-interest" value="樂器" onclick="if(!limitCheckbox('q9-interest', 4)) this.checked = false;"/>樂器   
+                <input type="checkbox" name="q9-interest" value="唱歌" onclick="if(!limitCheckbox('q9-interest', 4)) this.checked = false;"/>唱歌
+                <input type="checkbox" name="q9-interest" value="繪畫" onclick="if(!limitCheckbox('q9-interest', 4)) this.checked = false;"/>繪畫
+                <input type="checkbox" name="q9-interest" value="旅行" onclick="if(!limitCheckbox('q9-interest', 4)) this.checked = false;"/>旅行
+                <input type="checkbox" name="q9-interest" value="看展" onclick="if(!limitCheckbox('q9-interest', 4)) this.checked = false;"/>看展
+                <input type="checkbox" name="q9-interest" value="聽團" onclick="if(!limitCheckbox('q9-interest', 4)) this.checked = false;"/>聽團
+                <input type="checkbox" name="q9-interest" value="追星" onclick="if(!limitCheckbox('q9-interest', 4)) this.checked = false;"/>追星
+                <input type="checkbox" name="q9-interest" value="下廚" onclick="if(!limitCheckbox('q9-interest', 4)) this.checked = false;"/>下廚
+                <input type="checkbox" name="q9-interest" value="烘焙" onclick="if(!limitCheckbox('q9-interest', 4)) this.checked = false;"/>烘焙
+                <input type="checkbox" name="q9-interest" value="手作" onclick="if(!limitCheckbox('q9-interest', 4)) this.checked = false;"/>手作
+                <input type="checkbox" name="q9-interest" value="跑咖" onclick="if(!limitCheckbox('q9-interest', 4)) this.checked = false;"/>跑咖
+                <input type="checkbox" name="q9-interest" value="閱讀" onclick="if(!limitCheckbox('q9-interest', 4)) this.checked = false;"/>閱讀
+                <input type="checkbox" name="q9-interest" value="吃美食" onclick="if(!limitCheckbox('q9-interest', 4)) this.checked = false;"/>吃美食
+                <input type="checkbox" name="q9-interest" value="戶外活動" onclick="if(!limitCheckbox('q9-interest', 4)) this.checked = false;"/>戶外活動
+                <input type="checkbox" name="q9-interest" value="看運動比賽" onclick="if(!limitCheckbox('q9-interest', 4)) this.checked = false;"/>看運動比賽
+                <input type="checkbox" name="q9-interest" id="q9-other-check" onclick="if(!limitCheckbox('q9-interest', 4)) this.checked = false;"/>其他: <input type="text" id="q9-other-text"/>
+            </div>   
+
+        <h3> Q10 專長與能力（至多選4項）：</h3>
+            <div class="option-box">
+                <input type="checkbox" name="q10-skill" value="唱歌" onclick="if(!limitCheckbox('q10-skill', 4)) this.checked = false;"/>唱歌   
+                <input type="checkbox" name="q10-skill" value="舞蹈" onclick="if(!limitCheckbox('q10-skill', 4)) this.checked = false;"/>舞蹈     
+                <input type="checkbox" name="q10-skill" value="繪畫" onclick="if(!limitCheckbox('q10-skill', 4)) this.checked = false;"/>繪畫
+                <input type="checkbox" name="q10-skill" value="籃球" onclick="if(!limitCheckbox('q10-skill', 4)) this.checked = false;"/>籃球
+                <input type="checkbox" name="q10-skill" value="排球" onclick="if(!limitCheckbox('q10-skill', 4)) this.checked = false;"/>排球
+                <input type="checkbox" name="q10-skill" value="羽球" onclick="if(!limitCheckbox('q10-skill', 4)) this.checked = false;"/>羽球
+                <input type="checkbox" name="q10-skill" value="桌球" onclick="if(!limitCheckbox('q10-skill', 4)) this.checked = false;"/>桌球
+                <input type="checkbox" name="q10-skill" value="撞球" onclick="if(!limitCheckbox('q10-skill', 4)) this.checked = false;"/>撞球
+                <input type="checkbox" name="q10-skill" value="游泳" onclick="if(!limitCheckbox('q10-skill', 4)) this.checked = false;"/>游泳
+                <input type="checkbox" name="q10-skill" value="田徑" onclick="if(!limitCheckbox('q10-skill', 4)) this.checked = false;"/>田徑
+                <input type="checkbox" name="q10-skill" value="烹飪" onclick="if(!limitCheckbox('q10-skill', 4)) this.checked = false;"/>烹飪
+                <input type="checkbox" name="q10-skill" value="溝通領導" onclick="if(!limitCheckbox('q10-skill', 4)) this.checked = false;"/>溝通／領導
+                <input type="checkbox" name="q10-skill" value="理財投資" onclick="if(!limitCheckbox('q10-skill', 4)) this.checked = false;"/>理財／投資
+                <input type="checkbox" name="q10-skill" value="數理邏輯" onclick="if(!limitCheckbox('q10-skill', 4)) this.checked = false;"/>數理／邏輯思考
+                <input type="checkbox" name="q10-skill" value="電腦程式" onclick="if(!limitCheckbox('q10-skill', 4)) this.checked = false;"/>電腦程式／資訊技能
+                <br/>
+                <input type="checkbox" name="q10-skill" value="語言" onclick="if(!limitCheckbox('q10-skill', 4)) this.checked = false;"/>語言（英文、日文等）
+                <input type="checkbox" name="q10-skill" id="q10-other-check" onclick="if(!limitCheckbox('q10-skill', 4)) this.checked = false;"/>其他: <input type="text" id="q10-other-text"/>
+            </div>  
+
+        <h3> Q11 雷區（至多選4項）： </h3>
+            <div class="option-box">
+                <input type="checkbox" name="q11-bad" value="抽菸" onclick="if(!limitCheckbox('q11-bad', 4)) this.checked = false;"/>抽菸
+                <input type="checkbox" name="q11-bad" value="喝酒" onclick="if(!limitCheckbox('q11-bad', 4)) this.checked = false;"/>喝酒
+                <input type="checkbox" name="q11-bad" value="粗魯" onclick="if(!limitCheckbox('q11-bad', 4)) this.checked = false;"/>粗魯   
+                <input type="checkbox" name="q11-bad" value="冷暴力" onclick="if(!limitCheckbox('q11-bad', 4)) this.checked = false;"/>冷暴力
+                <input type="checkbox" name="q11-bad" value="沒耐心" onclick="if(!limitCheckbox('q11-bad', 4)) this.checked = false;"/>沒耐心
+                <input type="checkbox" name="q11-bad" value="沒禮貌" onclick="if(!limitCheckbox('q11-bad', 4)) this.checked = false;"/>沒禮貌
+                <input type="checkbox" name="q11-bad" value="脾氣差" onclick="if(!limitCheckbox('q11-bad', 4)) this.checked = false;"/>脾氣差
+                <input type="checkbox" name="q11-bad" value="愛抱怨" onclick="if(!limitCheckbox('q11-bad', 4)) this.checked = false;"/>愛抱怨
+                <input type="checkbox" name="q11-bad" value="愛炫耀" onclick="if(!limitCheckbox('q11-bad', 4)) this.checked = false;"/>愛炫耀
+                <input type="checkbox" name="q11-bad" value="愛翻舊帳" onclick="if(!limitCheckbox('q11-bad', 4)) this.checked = false;"/>愛翻舊帳
+                <input type="checkbox" name="q11-bad" value="小題大作" onclick="if(!limitCheckbox('q11-bad', 4)) this.checked = false;"/>小題大作
+                <input type="checkbox" name="q11-bad" value="衛生習慣差" onclick="if(!limitCheckbox('q11-bad', 4)) this.checked = false;"/>衛生習慣差
+                <input type="checkbox" name="q11-bad" value="缺乏同理心" onclick="if(!limitCheckbox('q11-bad', 4)) this.checked = false;"/>缺乏同理心
+                <input type="checkbox" name="q11-bad" value="缺乏上進心" onclick="if(!limitCheckbox('q11-bad', 4)) this.checked = false;"/>缺乏上進心
+                <input type="checkbox" name="q11-bad" value="缺乏責任感" onclick="if(!limitCheckbox('q11-bad', 4)) this.checked = false;"/>缺乏責任感
+                <br/>
+                <input type="checkbox" name="q11-bad" value="沒有邊界感" onclick="if(!limitCheckbox('q11-bad', 4)) this.checked = false;"/>沒有邊界感
+                <input type="checkbox" name="q11-bad" id="q11-other-check" onclick="if(!limitCheckbox('q11-bad', 4)) this.checked = false;"/>其他: <input type="text" id="q11-other-text"/>
+            </div>
+            <div style="margin-top: 30px; text-align: center;">
+            <button onclick="submitSurvey()" style="font-size: 18px; padding: 10px 20px; cursor: pointer;">提交問卷</button>
+            <button onclick="toggleHistory()" style="margin-left: 10px; cursor: pointer;">查看歷史紀錄 ☰</button>
+        </div>
+
+        <div id="history-section">
+            <span class="close-btn" onclick="toggleHistory()">×</span>
+            <h2 style="color: #6011af;">填寫歷史紀錄</h2>
+            <hr>
+            <ul id="history-list"></ul>
+            <button onclick="clearHistory()" style="margin-top: 20px;">清空所有紀錄</button>
+        </div>
+        <script>
+            // --- 1. 生成或取得瀏覽器 ID (確保只能刪除自己的紀錄) ---
+            function getOrGenerateUserID() {
+                let uid = localStorage.getItem('survey_uid');
+                if (!uid) {
+                    uid = 'user_' + Math.random().toString(36).substr(2, 9) + Date.now();
+                    localStorage.setItem('survey_uid', uid);
+                }
+                return uid;
+            }
+
+            // --- 2. Q3/Q4 連動邏輯 ---
+            function updateVisibility() {
+                const m = document.getElementById('pref-male').checked;
+                const f = document.getElementById('pref-female').checked;
+                const b = document.getElementById('pref-both').checked;
+                // 兼容處理：只要勾選男性或雙性，就顯示男性身高區塊
+                if(document.getElementById('section-male-height')) 
+                    document.getElementById('section-male-height').style.display = (m || b) ? 'block' : 'none';
+                if(document.getElementById('section-female-height'))
+                    document.getElementById('section-female-height').style.display = (f || b) ? 'block' : 'none';
+            }
+
+            // --- 3. 多選限制驗證 ---
+            function limitCheckbox(name, max) {
+                const checkedCount = document.querySelectorAll(`input[name="${name}"]:checked`).length;
+                if (checkedCount > max) {
+                    alert("這題最多只能選擇 " + max + " 項喔！");
+                    return false;
+                }
+                return true;
+            }
+
+            // --- 4. 提交問卷：完整記錄 Q1-Q11 ---
+            function submitSurvey() {
+                const nameVal = document.getElementById('user-name').value;
+                if (!nameVal) return alert("請輸入姓名才能提交！");
+
+                const record = {
+                    id: Date.now(),
+                    uid: getOrGenerateUserID(),
+                    time: new Date().toLocaleString(),
+                    details: {}
+                };
+
+                // 定義題目對應表 (請確認 HTML 中的 name 是否一致)
+                const qMap = {
+                    'user-gender': 'Q2 性別',
+                    'user-pref': 'Q3 性向',
+                    'q4-m-height': 'Q4 男性身高',
+                    'q4-f-height': 'Q4 女性身高',
+                    'q5-age': 'Q5 年齡',
+                    'q6-body': 'Q6 體態',
+                    'q7-appearance': 'Q7 外型',
+                    'q8-trait': 'Q8 人格特質',
+                    'q9-interest': 'Q9 興趣',
+                    'q10-skill': 'Q10 專長',
+                    'q11-bad': 'Q11 雷區'
+                };
+
+                record.details['Q1 姓名'] = nameVal;
+
+                for (let nameKey in qMap) {
+                    let selected = Array.from(document.getElementsByName(nameKey))
+                        .filter(i => i.checked)
+                        .map(i => i.value);
+                    
+                    // 處理「其他」文字輸入
+                    const prefix = nameKey.split('-')[0]; // 取得 q9, q10...
+                    const otherCheck = document.getElementById(prefix + '-other-check');
+                    const otherText = document.getElementById(prefix + '-other-text');
+                    if (otherCheck && otherCheck.checked && otherText && otherText.value) {
+                        selected.push("其他: " + otherText.value);
+                    }
+
+                    record.details[qMap[nameKey]] = selected.length > 0 ? selected.join(', ') : "未填寫";
+                }
+
+                let history = JSON.parse(localStorage.getItem('surveyRecords')) || [];
+                history.push(record);
+                localStorage.setItem('surveyRecords', JSON.stringify(history));
+
+                alert("提交成功！已完整記錄。");
+                renderHistory();
+            }
+
+            // --- 5. 側邊欄開關 ---
+            function toggleHistory() {
+                document.getElementById('history-section').classList.toggle('active');
+            }
+
+            function renderHistory() {
+                const list = document.getElementById('history-list');
+                const history = JSON.parse(localStorage.getItem('surveyRecords')) || [];
+                const currentUID = getOrGenerateUserID(); 
+                
+                if (history.length === 0) {
+                    list.innerHTML = "<p style='text-align:center; color:#999; padding:20px;'>暫無資料</p>";
+                    return;
+                }
+
+                list.innerHTML = history.slice().reverse().map(item => {
+                    // 如果是舊紀錄沒有 details 欄位，我們給它一個預設提示
+                    let detailsList = "暫無詳細資料(舊紀錄)";
+                    if (item.details) {
+                        detailsList = Object.entries(item.details)
+                            .map(([q, a]) => `<div style="margin:2px 0;"><strong>${q}:</strong> ${a}</div>`)
+                            .join('');
+                    }
+
+                    // 判斷是否顯示刪除鈕：只有 UID 匹配的紀錄才顯示
+                    const deleteBtn = (item.uid === currentUID) 
+                        ? `<button onclick="deleteRecord(${item.id})" style="background:none; border:1px solid #ff4d4f; color:#ff4d4f; cursor:pointer; font-size:11px; padding:2px 5px; border-radius:3px; float:right;">刪除我的紀錄</button>` 
+                        : "<span style='float:right; color:#ccc; font-size:10px;'>唯讀紀錄</span>";
+
+                    return `
+                        <div style="background:#fff; border:1px solid #eee; border-left:4px solid #6011af; padding:15px; margin-bottom:15px; border-radius:8px; font-size:13px; line-height:1.5; text-align:left; color:#333;">
+                            ${deleteBtn}
+                            <div style="color:#6011af; font-weight:bold; margin-bottom:8px;">🕒 ${item.time}</div>
+                            ${detailsList}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            function deleteRecord(id) {
+                if (confirm("確定刪除這筆屬於您的紀錄嗎？")) {
+                    let history = JSON.parse(localStorage.getItem('surveyRecords')) || [];
+                    history = history.filter(item => item.id !== id);
+                    localStorage.setItem('surveyRecords', JSON.stringify(history));
+                    renderHistory();
+                }
+            }
+
+            window.onload = renderHistory;
+            </script>
+            </script>
+        </body>
+</html>

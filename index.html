@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html>
+        <head>
+            <meta charset="UTF-8"></meta>
+            <title>兩性理想型調查</title>
+            <link rel="stylesheet" href="style.css"/>
+        </head>
+        <body>
+        <div class="container">
+            <h1>兩性理想型調查問卷</h1>
+            <div style="margin-top: 30px;">
+            </div>
+            
+        <div id="dynamic-questions">
+            <!-- All questions from database will be loaded here -->
+        </div>
+        
+        <div style="margin-top: 30px; text-align: center;">
+            <button onclick="submitSurvey()" style="font-size: 18px; padding: 10px 20px; cursor: pointer;">提交問卷</button>
+            <button onclick="toggleHistory()" style="margin-left: 10px; cursor: pointer;">查看歷史紀錄 ☰</button>
+        </div>
+
+        <div id="history-section">
+            <span class="close-btn" onclick="toggleHistory()">×</span>
+            <h2 style="color: #6011af;">填寫歷史紀錄</h2>
+            <hr>
+            <ul id="history-list"></ul>
+            <button onclick="clearHistory()" style="margin-top: 20px;">清空所有紀錄</button>
+        </div>
+        <script>
+            // --- 1. 生成或取得瀏覽器 ID (確保只能刪除自己的紀錄) ---
+            function getOrGenerateUserID() {
+                let uid = localStorage.getItem('survey_uid');
+                if (!uid) {
+                    uid = 'user_' + Math.random().toString(36).substr(2, 9) + Date.now();
+                    localStorage.setItem('survey_uid', uid);
+                }
+                return uid;
+            }
+
+            // --- 2. Load questions from database ---
+            async function loadQuestions() {
+                try {
+                    // Fetch questions from the database
+                    const response = await fetch('http://localhost:3001/questions');
+                    const questions = await response.json();
+                    
+                    // Process each question to fetch its options
+                    for (const question of questions) {
+                        // Fetch options for this specific question
+                        const optionsResponse = await fetch(`http://localhost:3001/questions/${question.id}/options`);
+                        const options = await optionsResponse.json();
+                        
+                        // Render the question with its options
+                        renderQuestionWithOptions(question, options);
+                    }
+                    
+                    // After all questions are rendered, hide Q3 and Q4 initially
+                    setTimeout(() => {
+                        const q3Element = document.querySelector('.question-item#question-3');
+                        const q4Element = document.querySelector('.question-item#question-4');
+                        
+                        if (q3Element) {
+                            q3Element.style.display = 'none';
+                        }
+                        if (q4Element) {
+                            q4Element.style.display = 'none';
+                        }
+                    }, 100); // Small delay to ensure elements are rendered
+                } catch (error) {
+                    console.error('Failed to load questions:', error);
+                }
+            }
+            
+            // --- 3. Render question with its options ---
+            function renderQuestionWithOptions(question, options) {
+                const container = document.getElementById('dynamic-questions');
+                const questionIndex = Array.from(container.children).length + 1; // Starting from Q1
+                
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-item';
+                questionDiv.id = `question-${question.id}`;
+                
+                // Check if this is Q3 (ideal partner height for male) or Q4 (ideal partner height for female) and add special class for conditional display
+                if (question.id === 3 || question.id === 4) {  // Using actual question IDs from database
+                    questionDiv.classList.add('conditional-question');
+                    questionDiv.setAttribute('data-question-dependent', '2'); // Depends on Q2
+                }
+                
+                // Create question title
+                const questionTitle = document.createElement('h3');
+                questionTitle.textContent = `Q${questionIndex} ${question.text}`;
+                questionDiv.appendChild(questionTitle);
+                
+                // Create option container
+                const optionContainer = document.createElement('div');
+                optionContainer.className = 'option-box';
+                
+                // Add options based on question type
+                if (question.question_type === '單選') { // 单选题
+                    options.forEach((option, optIndex) => {
+                        const optionId = `q${question.id}-opt${option.id}`;
+                        const input = document.createElement('input');
+                        input.type = 'radio';
+                        input.name = `question-${question.id}`;
+                        input.id = optionId;
+                        input.value = option.id; // Use option ID as value
+                        
+                        // Add event listener for Q2 to control Q3 and Q4 visibility
+                        if (question.id === 2) { // Q2 - using actual database ID
+                            input.addEventListener('change', function() {
+                                handleQ2Selection(this.value, options);
+                            });
+                        }
+                        
+                        const label = document.createElement('label');
+                        label.htmlFor = optionId;
+                        label.textContent = option.option_text;
+                        
+                        optionContainer.appendChild(input);
+                        optionContainer.appendChild(label);
+                        optionContainer.appendChild(document.createElement('br'));
+                    });
+                } else if (question.question_type === '多選') { // 多选题
+                    options.forEach((option, optIndex) => {
+                        const optionId = `q${question.id}-opt${option.id}`;
+                        const input = document.createElement('input');
+                        input.type = 'checkbox';
+                        input.name = `question-${question.id}`;
+                        input.id = optionId;
+                        input.value = option.id; // Use option ID as value
+                        
+                        const label = document.createElement('label');
+                        label.htmlFor = optionId;
+                        label.textContent = option.option_text;
+                        
+                        optionContainer.appendChild(input);
+                        optionContainer.appendChild(label);
+                        optionContainer.appendChild(document.createElement('br'));
+                    });
+                } else if (options && options.length > 0) {
+                    // If there are options but no specific type is set, default to radio buttons
+                    options.forEach((option, optIndex) => {
+                        const optionId = `q${question.id}-opt${option.id}`;
+                        const input = document.createElement('input');
+                        input.type = 'radio';
+                        input.name = `question-${question.id}`;
+                        input.id = optionId;
+                        input.value = option.id; // Use option ID as value
+                        
+                        // Add event listener for Q2 to control Q3 and Q4 visibility
+                        if (question.id === 2) { // Q2 - using actual database ID
+                            input.addEventListener('change', function() {
+                                handleQ2Selection(this.value, options);
+                            });
+                        }
+                        
+                        const label = document.createElement('label');
+                        label.htmlFor = optionId;
+                        label.textContent = option.option_text;
+                        
+                        optionContainer.appendChild(input);
+                        optionContainer.appendChild(label);
+                        optionContainer.appendChild(document.createElement('br'));
+                    });
+                } else {
+                    // Default to text input for open-ended questions
+                    const textInput = document.createElement('input');
+                    textInput.type = 'text';
+                    textInput.name = `question-${question.id}`;
+                    textInput.placeholder = "請輸入您的回答";
+                    optionContainer.appendChild(textInput);
+                }
+                
+                questionDiv.appendChild(optionContainer);
+                container.appendChild(questionDiv);
+            }
+
+            // --- 4. Submit survey to server ---
+            async function submitSurvey() {
+                // First, check if all visible questions have been answered
+                const questionsContainer = document.getElementById('dynamic-questions');
+                const questionElements = questionsContainer.querySelectorAll('.question-item');
+                
+                let unansweredQuestions = [];
+                
+                for (let i = 0; i < questionElements.length; i++) {
+                    const questionElement = questionElements[i];
+                    
+                    // Skip questions that are hidden (like Q3 and Q4 when not applicable)
+                    if (questionElement.style.display === 'none') {
+                        continue;
+                    }
+                    
+                    const questionTitle = questionElement.querySelector('h3').textContent.trim();
+                    
+                    // Check if the question has been answered based on its type
+                    if (questionElement.querySelector('input[type="radio"]')) {
+                        // Single choice question
+                        const selectedOption = questionElement.querySelector('input[type="radio"]:checked');
+                        if (!selectedOption) {
+                            unansweredQuestions.push(questionTitle);
+                        }
+                    } else if (questionElement.querySelector('input[type="checkbox"]')) {
+                        // Multiple choice question
+                        const selectedOptions = questionElement.querySelectorAll('input[type="checkbox"]:checked');
+                        if (selectedOptions.length === 0) {
+                            unansweredQuestions.push(questionTitle);
+                        }
+                    } else {
+                        // Text input question
+                        const textInput = questionElement.querySelector('input[type="text"]');
+                        if (textInput && textInput.value.trim() === '') {
+                            unansweredQuestions.push(questionTitle);
+                        }
+                    }
+                }
+                
+                // If there are unanswered questions, alert the user and return
+                if (unansweredQuestions.length > 0) {
+                    const unansweredList = unansweredQuestions.join('\n- ');
+                    alert(`請完成以下問題:\n- ${unansweredList}`);
+                    return;
+                }
+                
+                // 1. Get user information from dynamic questions
+                // Question ID 1: 性別 (Gender)
+                const genderQuestionElement = document.querySelector('.question-item#question-1');
+                let gender = '';
+                if (genderQuestionElement) {
+                    const selectedGenderOption = genderQuestionElement.querySelector('input[type="radio"]:checked');
+                    if (selectedGenderOption) {
+                        // Get the option text from the label
+                        const optionLabel = selectedGenderOption.nextElementSibling;
+                        gender = optionLabel ? optionLabel.textContent : '';
+                    }
+                }
+                
+                // Question ID 12: 年齡 (Age)
+                const ageQuestionElement = document.querySelector('.question-item#question-12');
+                let age = '未指定';
+                if (ageQuestionElement) {
+                    const selectedAgeOption = ageQuestionElement.querySelector('input[type="radio"]:checked');
+                    if (selectedAgeOption) {
+                        // Get the option text from the label
+                        const optionLabel = selectedAgeOption.nextElementSibling;
+                        age = optionLabel ? optionLabel.textContent : '未指定';
+                    }
+                }
+
+                try {
+                    // Create user in database with Q1 and Q12 answers
+                    const userResponse = await fetch('http://localhost:3001/users', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            anonymous_id: getOrGenerateUserID(),
+                            gender: gender,
+                            age_group: age
+                        })
+                    });
+
+                    if (!userResponse.ok) {
+                        throw new Error(`用戶創建失敗: ${userResponse.status}`);
+                    }
+
+                    const userData = await userResponse.json();
+                    const userId = userData.id;
+                    
+                    // 2. Collect and submit answers for all questions to responses table
+                    for (let i = 0; i < questionElements.length; i++) {
+                        const questionElement = questionElements[i];
+                        
+                        // Skip questions that are hidden (like Q3 and Q4 when not applicable)
+                        if (questionElement.style.display === 'none') {
+                            continue;
+                        }
+                        
+                        const questionId = parseInt(questionElement.id.split('-')[1]);
+                        
+                        // Get selected answers based on question type
+                        if (questionElement.querySelector('input[type="radio"]')) {
+                            // Single choice question
+                            const selectedOption = questionElement.querySelector('input[type="radio"]:checked');
+                            if (selectedOption) {
+                                const optionId = parseInt(selectedOption.value);
+                                const optionText = selectedOption.nextElementSibling.textContent;
+                                
+                                const answerResponse = await fetch('http://localhost:3001/responses', { // 修改端点
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        user_id: userId,
+                                        question_id: questionId,
+                                        option_id: optionId,
+                                        answer_text: optionText // 添加选项文本
+                                    })
+                                });
+
+                                if (!answerResponse.ok) {
+                                    console.error(`答案提交失敗 (問題 ${questionId}):`, answerResponse.status);
+                                }
+                            }
+                        } else if (questionElement.querySelector('input[type="checkbox"]')) {
+                            // Multiple choice question
+                            const selectedOptions = questionElement.querySelectorAll('input[type="checkbox"]:checked');
+                            for (const selectedOption of selectedOptions) {
+                                const optionId = parseInt(selectedOption.value);
+                                const optionText = selectedOption.nextElementSibling.textContent;
+                                
+                                const answerResponse = await fetch('http://localhost:3001/responses', { // 修改端点
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        user_id: userId,
+                                        question_id: questionId,
+                                        option_id: optionId,
+                                        answer_text: optionText // 添加选项文本
+                                    })
+                                });
+
+                                if (!answerResponse.ok) {
+                                    console.error(`答案提交失敗 (問題 ${questionId}):`, answerResponse.status);
+                                }
+                            }
+                        } else {
+                            // Text input question
+                            const textInput = questionElement.querySelector('input[type="text"]');
+                            if (textInput && textInput.value.trim() !== '') {
+                                const answerResponse = await fetch('http://localhost:3001/responses', { // 修改端点
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        user_id: userId,
+                                        question_id: questionId,
+                                        answer_text: textInput.value.trim()
+                                    })
+                                });
+
+                                if (!answerResponse.ok) {
+                                    console.error(`答案提交失敗 (問題 ${questionId}):`, answerResponse.status);
+                                }
+                            }
+                        }
+                    }
+
+                    // 3. Save to local storage
+                    const record = {
+                        id: Date.now(),
+                        uid: getOrGenerateUserID(),
+                        time: new Date().toLocaleString(),
+                        details: {
+                            'Q1 性別': gender || "未填寫",
+                            'Q2 年齡': age || "未填寫"
+                        }
+                    };
+
+                    // Add all questions to local record
+                    for (let i = 0; i < questionElements.length; i++) {
+                        const questionElement = questionElements[i];
+                        
+                        // Skip questions that are hidden (like Q3 and Q4 when not applicable)
+                        if (questionElement.style.display === 'none') {
+                            continue;
+                        }
+                        
+                        const questionTitle = questionElement.querySelector('h3').textContent.replace(/Q\d+\s/, '');
+                        
+                        let answerValue = [];
+                        if (questionElement.querySelector('input[type="radio"]')) {
+                            const selectedOption = questionElement.querySelector('input[type="radio"]:checked');
+                            if (selectedOption) {
+                                const optionText = selectedOption.nextElementSibling.textContent;
+                                answerValue = [optionText];
+                            }
+                        } else if (questionElement.querySelector('input[type="checkbox"]')) {
+                            const selectedOptions = questionElement.querySelectorAll('input[type="checkbox"]:checked');
+                            answerValue = Array.from(selectedOptions).map(opt => opt.nextElementSibling.textContent);
+                        } else {
+                            const textInput = questionElement.querySelector('input[type="text"]');
+                            if (textInput && textInput.value.trim() !== '') {
+                                answerValue = [textInput.value.trim()];
+                            }
+                        }
+                        
+                        // Calculate the question number considering hidden questions
+                        const visibleQuestions = Array.from(questionElements).filter(el => el.style.display !== 'none');
+                        const questionIndex = visibleQuestions.indexOf(questionElement);
+                        
+                        record.details[`Q${questionIndex+1} ${questionTitle}`] = answerValue.length > 0 ? answerValue.join(', ') : "未填寫";
+                    }
+
+                    let history = JSON.parse(localStorage.getItem('surveyRecords')) || [];
+                    history.push(record);
+                    localStorage.setItem('surveyRecords', JSON.stringify(history));
+
+                    alert("提交成功！問卷已完整記錄到本地和服務器。");
+                    renderHistory();
+                } catch (error) {
+                    console.error('提交失敗:', error);
+                    alert(`提交失敗: ${error.message}，但已保存到本地`);
+                    
+                    // Save to local storage even if server submission fails
+                    saveToLocalRecord(gender, age);
+                }
+            }
+
+            // --- 5. Save survey data to local storage ---
+            function saveToLocalRecord(gender, age) {
+                // Validate required parameters
+                const uid = getOrGenerateUserID();
+                if (!uid) {
+                    console.error('無法獲取或生成用戶ID');
+                    return;
+                }
+
+                const localRecord = {
+                    id: Date.now(),
+                    uid: uid,
+                    time: new Date().toLocaleString(),
+                    details: {
+                        'Q1 性別': gender || "未填寫",
+                        'Q2 年齡': age || "未填寫"
+                    }
+                };
+
+                try {
+                    // Add all questions to local record
+                    const questionElements = document.querySelectorAll('#dynamic-questions .question-item');
+                    if (!questionElements || questionElements.length === 0) {
+                        throw new Error('未找到問卷問題元素');
+                    }
+
+                    for (let i = 0; i < questionElements.length; i++) {
+                        const questionElement = questionElements[i];
+                        
+                        // Skip questions that are hidden
+                        if (questionElement.style.display === 'none') {
+                            continue;
+                        }
+                        
+                        const questionTitleElement = questionElement.querySelector('h3');
+                        if (!questionTitleElement) {
+                            console.warn(`問題 ${i+1} 缺少標題元素`);
+                            continue;
+                        }
+                        
+                        const questionTitle = questionTitleElement.textContent.replace(/Q\d+\s/, '');
+                        
+                        let answerValue = [];
+                        
+                        // Radio buttons (single choice)
+                        const radioInputs = questionElement.querySelectorAll('input[type="radio"]');
+                        if (radioInputs.length > 0) {
+                            const selectedOption = questionElement.querySelector('input[type="radio"]:checked');
+                            if (selectedOption) {
+                                const optionText = selectedOption.nextElementSibling?.textContent?.trim();
+                                if (optionText) {
+                                    answerValue = [optionText];
+                                }
+                            }
+                        } 
+                        // Checkboxes (multiple choice)
+                        else if (questionElement.querySelector('input[type="checkbox"]')) {
+                            const selectedOptions = questionElement.querySelectorAll('input[type="checkbox"]:checked');
+                            if (selectedOptions.length > 0) {
+                                answerValue = Array.from(selectedOptions)
+                                    .map(opt => opt.nextElementSibling?.textContent?.trim())
+                                    .filter(text => text); // Remove any undefined or empty values
+                            }
+                        } 
+                        // Text input
+                        else {
+                            const textInput = questionElement.querySelector('input[type="text"]');
+                            if (textInput && textInput.value?.trim()) {
+                                answerValue = [textInput.value.trim()];
+                            }
+                        }
+                        
+                        // Calculate the question number considering only visible questions
+                        const visibleQuestions = Array.from(questionElements).filter(el => el.style.display !== 'none');
+                        const questionIndex = visibleQuestions.indexOf(questionElement);
+                        
+                        // Ensure we have a valid question index
+                        if (questionIndex >= 0) {
+                            localRecord.details[`Q${questionIndex+1} ${questionTitle}`] = answerValue.length > 0 ? answerValue.join(', ') : "未填寫";
+                        }
+                    }
+
+                    // Get existing history and add new record
+                    let history = [];
+                    try {
+                        const historyJSON = localStorage.getItem('surveyRecords');
+                        if (historyJSON) {
+                            history = JSON.parse(historyJSON);
+                            // Validate that history is an array
+                            if (!Array.isArray(history)) {
+                                console.warn('歷史紀錄格式錯誤，將初始化為空陣列');
+                                history = [];
+                            }
+                        }
+                    } catch (parseError) {
+                        console.error('解析歷史紀錄失敗:', parseError);
+                        history = [];
+                    }
+
+                    // Add new record and save back to localStorage
+                    history.push(localRecord);
+                    localStorage.setItem('surveyRecords', JSON.stringify(history));
+                    
+                    // Refresh the history display
+                    renderHistory();
+                    
+                } catch (error) {
+                    console.error('保存到本地存儲時發生錯誤:', error);
+                    // Show user-friendly message if possible
+                    try {
+                        alert('資料驗證失敗，但已盡力保存到本地');
+                    } catch (alertError) {
+                        console.error('顯示警告消息時出錯:', alertError);
+                    }
+                }
+            }
+
+            // --- 6. 側邊欄開關 ---
+            function toggleHistory() {
+                document.getElementById('history-section').classList.toggle('active');
+            }
+
+            function renderHistory() {
+                const list = document.getElementById('history-list');
+                const history = JSON.parse(localStorage.getItem('surveyRecords')) || [];
+                const currentUID = getOrGenerateUserID(); 
+                
+                if (history.length === 0) {
+                    list.innerHTML = "<p style='text-align:center; color:#999; padding:20px;'>暫無資料</p>";
+                    return;
+                }
+
+                list.innerHTML = history.slice().reverse().map(item => {
+                    // 如果是舊紀錄沒有 details 欄位，我們給它一個預設提示
+                    let detailsList = "暫無詳細資料(舊紀錄)";
+                    if (item.details) {
+                        // Filter and sort the questions to ensure correct Q numbering
+                        const sortedEntries = Object.entries(item.details).sort(([q1], [q2]) => {
+                            const qNum1 = parseInt(q1.match(/^Q(\d+)/)?.[1] || '0');
+                            const qNum2 = parseInt(q2.match(/^Q(\d+)/)?.[1] || '0');
+                            return qNum1 - qNum2;
+                        });
+                        
+                        detailsList = sortedEntries
+                            .map(([q, a], index) => {
+                                // Extract the question text after the Q number
+                                const questionText = q.replace(/^Q\d+\s/, '');
+                                return `<div style="margin:2px 0;"><strong>Q${index + 1} ${questionText}:</strong> ${a}</div>`;
+                            })
+                            .join('');
+                    }
+
+                    // 判斷是否顯示刪除鈕：只有 UID 匹配的紀錄才顯示
+                    const deleteBtn = (item.uid === currentUID) 
+                        ? `<button onclick="deleteRecord(${item.id})" style="background:none; border:1px solid #ff4d4f; color:#ff4d4f; cursor:pointer; font-size:11px; padding:2px 5px; border-radius:3px; float:right;">刪除我的紀錄</button>` 
+                        : "<span style='float:right; color:#ccc; font-size:10px;'>唯讀紀錄</span>";
+
+                    return `
+                        <div style="background:#fff; border:1px solid #eee; border-left:4px solid #6011af; padding:15px; margin-bottom:15px; border-radius:8px; font-size:13px; line-height:1.5; text-align:left; color:#333;">
+                            ${deleteBtn}
+                            <div style="color:#6011af; font-weight:bold; margin-bottom:8px;">🕒 ${item.time}</div>
+                            ${detailsList}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            function deleteRecord(id) {
+                if (confirm("確定刪除這筆屬於您的紀錄嗎？")) {
+                    let history = JSON.parse(localStorage.getItem('surveyRecords')) || [];
+                    history = history.filter(item => item.id !== id);
+                    localStorage.setItem('surveyRecords', JSON.stringify(history));
+                    renderHistory();
+                }
+            }
+
+            // Function to handle Q2 selection and show/hide Q3 and Q4
+            function handleQ2Selection(selectedOptionId, options) {
+                // Find the selected option text based on the selected option ID
+                const selectedOption = options.find(opt => opt.id == selectedOptionId);
+                const selectedOptionText = selectedOption ? selectedOption.option_text : '';
+                
+                // Hide both Q3 and Q4 initially
+                const q3Element = document.querySelector('.question-item#question-3');
+                const q4Element = document.querySelector('.question-item#question-4');
+                
+                if (q3Element) {
+                    q3Element.style.display = 'none';
+                }
+                if (q4Element) {
+                    q4Element.style.display = 'none';
+                }
+                
+                // Show Q3 and/or Q4 based on selection in Q2
+                if (selectedOptionText === '男性') {
+                    // Show Q3 (理想對象的身高是? (男性))
+                    if (q3Element) {
+                        q3Element.style.display = 'block';
+                    }
+                } else if (selectedOptionText === '女性') {
+                    // Show Q4 (理想對象的身高是? (女性))
+                    if (q4Element) {
+                        q4Element.style.display = 'block';
+                    }
+                } else if (selectedOptionText === '雙性戀') {
+                    // Show both Q3 and Q4
+                    if (q3Element) {
+                        q3Element.style.display = 'block';
+                    }
+                    if (q4Element) {
+                        q4Element.style.display = 'block';
+                    }
+                }
+            }
+
+            // Load questions when the page loads
+            window.onload = function() {
+                loadQuestions();
+                renderHistory();
+            };
+            </script>
+        </body>
+</html>

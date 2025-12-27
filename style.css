@@ -1,0 +1,57 @@
+/* 基礎排版修正 */
+body {
+    font-family: "Microsoft JhengHei", sans-serif;
+    background-color: #f4f7f6;
+    display: flex;
+    flex-direction: column; /* 強制垂直排列 */
+    align-items: center;    /* 水平置中 */
+    margin: 0;
+    padding: 20px;
+}
+
+/* 主容器 */
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    max-width: 800px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 選項盒：修正厚邊框擠壓問題 */
+.option-box {
+    padding: 15px;
+    margin: 15px 0;
+    background-color: rgba(173, 216, 230, 0.5);
+    border-radius: 8px;
+    display: block; /* 確保內含物垂直堆疊或正常換行 */
+}
+
+/* 側邊欄歷史紀錄 (滑出效果) */
+#history-section {
+    position: fixed;
+    top: 0;
+    right: -350px; /* 初始隱藏在螢幕外 */
+    width: 320px;
+    height: 100%;
+    background: #ffffff;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+    transition: 0.3s ease; /* 滑動動畫 */
+    padding: 30px 20px;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+/* 激活狀態：滑入螢幕 */
+#history-section.active {
+    right: 0;
+}
+
+.close-btn {
+    float: right;
+    cursor: pointer;
+    font-size: 28px;
+    font-weight: bold;
+}
