@@ -1,15 +1,21 @@
-/* 基礎排版修正 */
+/* =========================
+基礎排版修正（原本＋美化）
+   ========================= */
 body {
-    font-family: "Microsoft JhengHei", sans-serif;
-    background-color: #f4f7f6;
+    font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    background: linear-gradient(135deg, #e3f2fd, #fce4ec);
+    color: #333;
     display: flex;
-    flex-direction: column; /* 強制垂直排列 */
-    align-items: center;    /* 水平置中 */
+    flex-direction: column;
+    align-items: center;
     margin: 0;
     padding: 20px;
+    line-height: 1.6;
 }
 
-/* 主容器 */
+/* =========================
+主容器（卡片感）
+   ========================= */
 .container {
     background: white;
     padding: 30px;
@@ -18,12 +24,189 @@ body {
     max-width: 800px;
     width: 100%;
     box-sizing: border-box;
+    animation: fadeIn 0.6s ease-in-out;
 }
 
-/* 選項盒：修正厚邊框擠壓問題 */
+/* 淡入動畫 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================
+  進度條（第1點）
+   ========================= */
+.progress {
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 40%; /* 之後可由 JS 動態調整 */
+    background: linear-gradient(90deg, #64b5f6, #ec407a);
+    transition: width 0.4s ease;
+}
+
+/* =========================
+題目文字
+   ========================= */
+.question {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #37474f;
+}
+
+/* =========================
+選項盒（原本＋互動）
+   ========================= */
 .option-box {
     padding: 15px;
     margin: 15px 0;
+    background-color: rgba(173, 216, 230, 0.5);
+    border-radius: 8px;
+    display: block;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: 2px solid transparent;
+}
+
+/* 滑過效果 */
+.option-box:hover {
+    background-color: rgba(135, 206, 235, 0.6);
+    transform: translateY(-2px);
+}
+
+/* radio 放大 */
+.option-box input[type="radio"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+
+/* 選中狀態（JS 加 class） */
+.option-box.selected {
+    border: 2px solid #42a5f5;
+    background-color: #e3f2fd;
+}
+
+/* =========================
+按鈕設計
+   ========================= */
+button {
+    background: linear-gradient(135deg, #64b5f6, #ec407a);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* =========================
+ 側邊欄歷史紀錄
+   ========================= */
+#history-section {
+    position: fixed;
+    top: 0;
+    right: -350px;
+    width: 320px;
+    height: 100%;
+    background: #ffffff;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+    transition: 0.3s ease;
+    padding: 30px 20px;
+    z-index: 1000;
+    overflow-y: auto;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+/* 滑入狀態 */
+#history-section.active {
+    right: 0;
+}
+
+/* 側邊欄標題 */
+#history-section h2 {
+    margin-top: 0;
+    color: #1976d2;
+}
+
+/* 側邊欄清單 */
+#history-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+#history-section li {
+    background: #f5f5f5;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+/* =========================
+關閉按鈕
+   ========================= */
+.close-btn {
+    float: right;
+    cursor: pointer;
+    font-size: 28px;
+    font-weight: bold;
+    transition: 0.2s ease;
+}
+
+.close-btn:hover {
+    color: #e53935;
+    transform: rotate(90deg);
+}
+
+/* =========================
+  手機版 RWD
+   ========================= */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    .question {
+        font-size: 18px;
+    }
+
+    .option-box {
+        font-size: 15px;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    #history-section {
+        width: 100%;
+    }
+}
+
     background-color: rgba(173, 216, 230, 0.5);
     border-radius: 8px;
     display: block; /* 確保內含物垂直堆疊或正常換行 */
@@ -54,4 +237,5 @@ body {
     cursor: pointer;
     font-size: 28px;
     font-weight: bold;
+
 }
